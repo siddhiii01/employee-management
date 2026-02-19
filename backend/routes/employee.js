@@ -1,6 +1,6 @@
 import express from 'express';
 import { Employee } from "../models/Employee.js";
-import authRoutes from "../routes/auth.js";
+import {authMiddleware} from '../middleware/auth.js'
 import multer from 'multer';
 import path from 'path';
 
@@ -25,7 +25,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //Create Employee
-router.post('/', upload.single('photo'), async(req, res) => {
+router.post('/',authMiddleware, upload.single('photo'), async(req, res) => {
     try{
         const employeeData = req.body;
         console.log(employeeData)
@@ -43,7 +43,7 @@ router.post('/', upload.single('photo'), async(req, res) => {
 
 
 //Get all Employess with search and filter
-router.get('/', async(req, res) => {
+router.get('/',authMiddleware, async(req, res) => {
     try{
         const {search, department, designation, gender} = req.query;
         let query = {}; //filter object

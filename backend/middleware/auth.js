@@ -1,8 +1,12 @@
 import jwt from "jsonwebtoken";
 
 export const authMiddleware = (req,res, next) => {
-    const token = req.headers.authorization?.spilt('')[1];
+    const authHeader = req.headers.authorization;
+    if(!authHeader) return res.status(401).json({
+        error: "Missing or invalid Authorization header"
+    });
 
+    const token = authHeader.split(' ')[1];
     if(!token){
         return res.status(401).json({ error: 'No token, access denied' });
     }
@@ -13,6 +17,7 @@ export const authMiddleware = (req,res, next) => {
         next();
 
     } catch(e){
+        console.error('JWT verification failed:', err.message);
         res.status(401).json({ error: 'Invalid token' });
     }
 }
