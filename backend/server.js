@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js'
+import employeeRoutes from "./routes/employee.js";
 
 dotenv.config();
 
@@ -18,7 +19,8 @@ mongoose.connect(process.env.MONGO_URI)
   .catch((err) => console.log('DB Error:', err));
 
 //Routes
-app.use('/api/auth', authRoutes)
+app.use('/api/auth', authRoutes);
+app.use('/api/employees', employeeRoutes)
 
 
 app.get('/', (req, res) => {
