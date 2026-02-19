@@ -22,14 +22,14 @@ router.post('/register', async(req, res) => {
 
 //Existing User Logging In
 router.post('/login', async(req, res) => {
-
+    console.log('LOGIN ROUTE WAS HIT! Body:', req.body);
     try{
 
         const {email, password} = req.body;
 
         //Find User from DB
         const user = await User.findOne({email});
-        if (!user) return res.status(404).json({ error: 'User not found' });
+        if (!user) return res.status(401).json({ error: 'Invalied email or password' });
 
         //Compare password
         const isMatch = await bcrypt.compare(password, user.password);

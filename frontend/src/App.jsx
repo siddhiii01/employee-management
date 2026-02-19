@@ -1,7 +1,7 @@
 import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
-
+import React from 'react';
 
 const PrivateRoute = ({children}) => {
   const token = localStorage.getItem('token');

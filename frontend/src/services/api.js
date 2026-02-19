@@ -4,12 +4,13 @@ import axios from "axios";
 export const API = axios.create({
     baseURL: import.meta.env.VITE_API_URL
 });
+console.log("Axios baseURL:", import.meta.env.VITE_API_URL);
 
 //request interceptor -> runs before sending any request to backend
 API.interceptors.request.use((req) => {
     console.log('req: ', req)
     const token = localStorage.getItem('token');
-    if(token) req.headers.Authorization = `${token}`;
+    if(token) req.headers.Authorization = `Bearer ${token}`;
     return req;
 });
 
