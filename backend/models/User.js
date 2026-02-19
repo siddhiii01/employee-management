@@ -15,11 +15,11 @@ const userSchema = new mongoose.Schema({
 
 
 //Middleware that runs Before saving the data -> Hashing the password before saving the user in DB
-userSchema.pre("save", async function (next) {
-    if(!this.isModified("password")) return next(); 
+userSchema.pre("save", async function() {
+    if(!this.isModified("password")) return ; 
     //hashing the password -> user was new or pasword was newly set
     this.password = await bcrypt.hash(this.password, 10);
-    next(); 
+     
 });
 
 export const User = mongoose.model("User", userSchema);

@@ -2,6 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import cors from 'cors';
 import dotenv from 'dotenv';
+import authRoutes from './routes/auth.js'
 
 dotenv.config();
 
@@ -15,6 +16,9 @@ app.use('/uploads', express.static('uploads'))
 mongoose.connect(process.env.MONGO_URI)
   .then(() => console.log('MongoDB connected'))
   .catch((err) => console.log('DB Error:', err));
+
+//Routes
+app.use('/api/auth', authRoutes)
 
 
 app.get('/', (req, res) => {
