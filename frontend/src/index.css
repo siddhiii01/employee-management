@@ -1,1 +1,28 @@
-@import "tailwindcss";
+@font-face {
+  font-family: 'Inter';
+  src: url('./Assets/fonts/Inter-VariableFont_opsz,wght.ttf') format('truetype');
+  font-weight: 100 900;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+:root {
+  --pink: #E91E8C;
+  --blue: #4A6FA5;
+  --blue-dark: #3B5998;
+  --sidebar-width: 210px;
+  --header-height: 60px;
+  --text-dark: #333;
+  --text-blue: #4A6FA5;
+  --border: #e0e0e0;
+  --bg-grey: #f5f5f5;
+}
+
+body {
+  background: var(--bg-grey);
+}

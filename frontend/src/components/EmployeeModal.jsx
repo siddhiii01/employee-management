@@ -1,9 +1,11 @@
 import { useForm } from 'react-hook-form'
-import { createEmployee } from '../services/api'
-import toast from 'react-hot-toast'
-import React from 'react'
+import { toast } from 'react-toastify'
+import {createEmployee} from '../services/api'
+import './EmployeeModal.css'
 
-export const EmployeeModal = ({ onClose, onSuccess }) => {
+const DEPARTMENTS = ['HR', 'Engineering', 'Product Development', 'Sales', 'Marketing', 'Finance', 'Operations']
+const DESIGNATIONS = ['Software Developer', 'Senior Developer', 'Team Lead', 'Manager', 'HR Executive', 'Sales Executive', 'Analyst']
+export const  EmployeeModal = ({ onClose, onSuccess }) => {
   const { register, handleSubmit, formState: { errors } } = useForm()
 
   const onSubmit = async (data) => {
@@ -11,7 +13,7 @@ export const EmployeeModal = ({ onClose, onSuccess }) => {
       const formData = new FormData()
       Object.keys(data).forEach(key => {
         if (key === 'photo') {
-          formData.append('photo', data.photo[0])
+          if (data.photo[0]) formData.append('photo', data.photo[0])
         } else {
           formData.append(key, data[key])
         }
@@ -21,149 +23,113 @@ export const EmployeeModal = ({ onClose, onSuccess }) => {
       onSuccess()
       onClose()
     } catch (err) {
-      toast.error('Failed to create employee')
+      toast.error(err.response?.data?.error || 'Failed to create employee')
     }
   }
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-xl p-8 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">Create Employee</h2>
-          <button onClick={onClose} className="text-gray-400 hover:text-gray-600 text-2xl">&times;</button>
+    <div className="modal-overlay">
+      <div className="modal">
+        <div className="modal-header">
+          <h2>Create OD Request</h2>
+          <button className="modal-close" onClick={onClose}>✕</button>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="grid grid-cols-2 gap-4">
-          
-          {/* Full Name */}
-          <div className="col-span-2">
-            <label className="text-sm font-medium text-gray-700">Full Name</label>
-            <input
-              {...register('fullName', { required: 'Full name is required' })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter full name"
-            />
-            {errors.fullName && <p className="text-red-500 text-xs mt-1">{errors.fullName.message}</p>}
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="modal-body">
+            {/* Row 1 */}
+            <div className="modal-row">
+              <div className="modal-field">
+                <label>Full Name <span className="required">*</span></label>
+                <input
+                  placeholder="Enter name"
+                  {...register('fullName', { required: 'Full name is required' })}
+                />
+                {errors.fullName && <span className="error">{errors.fullName.message}</span>}
+              </div>
+
+              <div className="modal-field">
+                <label>Email <span className="required">*</span></label>
+                <input
+                  placeholder="Enter Email"
+                  {...register('email', {
+                    required: 'Email is required',
+                    pattern: { value: /^\S+@\S+\.\S+$/, message: 'Invalid email format' }
+                  })}
+                />
+                {errors.email && <span className="error">{errors.email.message}</span>}
+              </div>
+
+              <div className="modal-field">
+                <label>Contact <span className="required">*</span></label>
+                <input
+                  placeholder="Enter contact"
+                  {...register('phoneNumber', {
+                    required: 'Phone number is required',
+                    pattern: { value: /^\d{10}$/, message: 'Must be exactly 10 digits' }
+                  })}
+                />
+                {errors.phoneNumber && <span className="error">{errors.phoneNumber.message}</span>}
+              </div>
+
+              <div className="modal-field">
+                <label>Gender <span className="required">*</span></label>
+                <select {...register('gender', { required: 'Gender is required' })}>
+                  <option value="">Select</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                  <option value="Other">Other</option>
+                </select>
+                {errors.gender && <span className="error">{errors.gender.message}</span>}
+              </div>
+            </div>
+
+            {/* Row 2 */}
+            <div className="modal-row">
+              <div className="modal-field">
+                <label>Date of Birth <span className="required">*</span></label>
+                <input
+                  type="date"
+                  {...register('dateOfBirth', { required: 'Date of birth is required' })}
+                />
+                {errors.dateOfBirth && <span className="error">{errors.dateOfBirth.message}</span>}
+              </div>
+
+              <div className="modal-field">
+                <label>Department <span className="required">*</span></label>
+                <select {...register('department', { required: 'Department is required' })}>
+                  <option value="">Select</option>
+                  {DEPARTMENTS.map(d => <option key={d} value={d}>{d}</option>)}
+                </select>
+                {errors.department && <span className="error">{errors.department.message}</span>}
+              </div>
+
+              <div className="modal-field">
+                <label>Designation <span className="required">*</span></label>
+                <select {...register('designation', { required: 'Designation is required' })}>
+                  <option value="">Select</option>
+                  {DESIGNATIONS.map(d => <option key={d} value={d}>{d}</option>)}
+                </select>
+                {errors.designation && <span className="error">{errors.designation.message}</span>}
+              </div>
+
+              <div className="modal-field">
+                <label>Employee Photo <span className="required">*</span></label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  className="file-input"
+                  {...register('photo')}
+                />
+              </div>
+            </div>
           </div>
 
-          {/* Email */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">Email</label>
-            <input
-              {...register('email', {
-                required: 'Email is required',
-                pattern: { value: /^\S+@\S+$/i, message: 'Invalid email format' }
-              })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="Enter email"
-            />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
-          </div>
-
-          {/* Phone */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">Phone Number</label>
-            <input
-              {...register('phoneNumber', {
-                required: 'Phone number is required',
-                pattern: { value: /^[0-9]{10}$/, message: 'Phone must be exactly 10 digits' }
-              })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              placeholder="10 digit number"
-            />
-            {errors.phoneNumber && <p className="text-red-500 text-xs mt-1">{errors.phoneNumber.message}</p>}
-          </div>
-
-          {/* Date of Birth */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">Date of Birth</label>
-            <input
-              type="date"
-              {...register('dateOfBirth', { required: 'Date of birth is required' })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500"
-            />
-            {errors.dateOfBirth && <p className="text-red-500 text-xs mt-1">{errors.dateOfBirth.message}</p>}
-          </div>
-
-          {/* Gender */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">Gender</label>
-            <select
-              {...register('gender', { required: 'Gender is required' })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 text-sm focus:outline-none"
-            >
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-            {errors.gender && <p className="text-red-500 text-xs mt-1">{errors.gender.message}</p>}
-          </div>
-
-          {/* Department */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">Department</label>
-            <select
-              {...register('department', { required: 'Department is required' })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 text-sm focus:outline-none"
-            >
-              <option value="">Select Department</option>
-              <option value="HR">HR</option>
-              <option value="Engineering">Engineering</option>
-              <option value="Marketing">Marketing</option>
-              <option value="Finance">Finance</option>
-              <option value="Sales">Sales</option>
-            </select>
-            {errors.department && <p className="text-red-500 text-xs mt-1">{errors.department.message}</p>}
-          </div>
-
-          {/* Designation */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">Designation</label>
-            <select
-              {...register('designation', { required: 'Designation is required' })}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 text-sm focus:outline-none"
-            >
-              <option value="">Select Designation</option>
-              <option value="Manager">Manager</option>
-              <option value="Developer">Developer</option>
-              <option value="Designer">Designer</option>
-              <option value="Analyst">Analyst</option>
-              <option value="Intern">Intern</option>
-            </select>
-            {errors.designation && <p className="text-red-500 text-xs mt-1">{errors.designation.message}</p>}
-          </div>
-
-          {/* Photo */}
-          <div>
-            <label className="text-sm font-medium text-gray-700">Employee Photo</label>
-            <input
-              type="file"
-              accept="image/*"
-              {...register('photo')}
-              className="w-full border border-gray-300 rounded-lg px-4 py-2 mt-1 text-sm focus:outline-none"
-            />
-          </div>
-
-          {/* Buttons */}
-          <div className="col-span-2 flex justify-end gap-3 mt-4">
-            <button
-              type="button"
-              onClick={onClose}
-              className="px-6 py-2 border border-gray-300 rounded-lg text-sm hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-6 py-2 bg-indigo-600 text-white rounded-lg text-sm hover:bg-indigo-700"
-            >
-              Create Employee
-            </button>
+          <div className="modal-footer">
+            <button type="submit" className="save-btn">Save</button>
           </div>
         </form>
       </div>
     </div>
   )
 }
-

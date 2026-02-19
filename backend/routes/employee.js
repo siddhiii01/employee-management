@@ -66,7 +66,7 @@ router.get('/',authMiddleware, async(req, res) => {
         if (gender) query.gender = gender;
 
         const employees = await Employee.find(query).sort({ createdAt: -1 });
-        res.json({ data: employees, total: employees.length });
+        res.json({ data: employees || [], total: employees.length });
 
 
     }catch(e){

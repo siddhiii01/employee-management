@@ -1,57 +1,70 @@
-import { useForm } from 'react-hook-form'
-import { useNavigate } from 'react-router-dom'
-import { loginUser } from '../services/api'
+import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import toast from 'react-hot-toast'
-import React from 'react'
+import { loginUser } from "../services/api";
+import "./Login.css";
 
-export const Login = () => {
-  const { register, handleSubmit, formState: { errors } } = useForm()
-  const navigate = useNavigate()
+export const Login = () =>  {
+  const { register, handleSubmit } = useForm();
+  const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
 
   const onSubmit = async (data) => {
     try {
       const res = await loginUser(data)
-      localStorage.setItem('token', res.data.token)
-      toast.success('Login successful')
-      navigate('/dashboard')
+      localStorage.setItem("token", res.data.token);
+      toast.success("Login successful!");
+      navigate("/dashboard");
     } catch (err) {
-      toast.error('Invalid email or password')
+      toast.error(err.response?.data?.error || "Login failed");
     }
-  }
+  };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
-      <div className="bg-white p-10 rounded-xl shadow-md w-full max-w-md">
-        <h2 className="text-2xl font-semibold mb-2">Welcome Back</h2>
-        <p className="text-gray-500 mb-6">Sign in to your account</p>
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
-          <div>
+    <div className="login-page">
+      <div className="login-bg-top" />
+      <div className="login-bg-bottom" />
+      <div className="login-card">
+        <h1 className="login-logo">IDMS</h1>
+        <p className="login-subtitle">Welcome to HR Admin Panel</p>
+
+        <form onSubmit={handleSubmit(onSubmit)}>
+          <div className="form-group">
+            <label>User Name</label>
             <input
-              type="email"
-              placeholder="Email"
-              {...register('email', { required: 'Email is required' })}
-              className="border border-gray-300 rounded-lg px-4 py-3 text-sm w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              type="text"
+              placeholder="Enter User Name"
+              {...register("email", { required: true })}
             />
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email.message}</p>}
           </div>
-          <div>
+
+          <div className="form-group">
+            <label>Enter Password</label>
             <input
-              type="password"
-              placeholder="Password"
-              {...register('password', { required: 'Password is required' })}
-              className="border border-gray-300 rounded-lg px-4 py-3 text-sm w-full focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              type={showPassword ? "text" : "password"}
+              placeholder="Enter Password"
+              {...register("password", { required: true })}
             />
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password.message}</p>}
           </div>
-          <button
-            type="submit"
-            className="bg-indigo-600 text-white py-3 rounded-lg font-medium hover:bg-indigo-700 transition"
-          >
-            Login
-          </button>
+
+          <div className="login-options">
+            <label className="checkbox-label">
+              <input
+                type="checkbox"
+                onChange={(e) => setShowPassword(e.target.checked)}
+              />
+              Show Password
+            </label>
+            <label className="checkbox-label">
+              <input type="checkbox" />
+              Remember Me
+            </label>
+          </div>
+
+          <button type="submit" className="login-btn">Login</button>
         </form>
       </div>
     </div>
-  )
+  );
 }
-
