@@ -17,7 +17,7 @@ export const authMiddleware = (req,res, next) => {
         next();
 
     } catch(e){
-        console.error('JWT verification failed:', err.message);
+        console.error('JWT verification failed:', e.message);
         res.status(401).json({ error: 'Invalid token' });
     }
 }

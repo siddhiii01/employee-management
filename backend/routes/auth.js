@@ -2,30 +2,17 @@ import express from 'express';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
 import { User } from '../models/User.js';
-
+import { validate } from '../middleware/validate.js';
+import { loginSchema } from '../validations/schema.js';
 const router = express.Router();
 
-//Creating a new User
-router.post('/register', async(req, res) => {
-    try{
-        const {email, password} = req.body;
 
-        //Create user in DB
-        await User.create({email, password});
-
-        res.status(201).json({ message: 'User created successfully' });
-
-    } catch(e){
-        res.status(400).json({ error: e.message });
-    }
-});
 
 //Existing User Logging In
-router.post('/login', async(req, res) => {
-    console.log('LOGIN ROUTE WAS HIT! Body:', req.body);
+router.post('/login', validate(loginSchema), async(req, res) => {
     try{
 
-        const {email, password} = req.body;
+        const {email, password} = req.validatedData;
 
         //Find User from DB
         const user = await User.findOne({email});
@@ -38,7 +25,7 @@ router.post('/login', async(req, res) => {
         const token = jwt.sign(
             {id: user._id},
             process.env.JWT_SECRET,
-            {expiresIn: '1h'}
+            {expiresIn: '24h'}
         );
 
         res.json({token});

@@ -9,8 +9,9 @@ dotenv.config();
 
 const app = express();
 
-app.use(cors())
-app.use(express.json())
+app.use(cors({ origin: "http://localhost:5173", credentials: true }))
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static('uploads'))
 
 // MongoDB Connection
@@ -22,6 +23,9 @@ mongoose.connect(process.env.MONGO_URI)
 app.use('/api/auth', authRoutes);
 app.use('/api/employees', employeeRoutes)
 
+app.use((err, req, res, next) => {
+    res.status(500).json({ error: err.message });
+});
 
 app.get('/', (req, res) => {
   res.send('Server is running');

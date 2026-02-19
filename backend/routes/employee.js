@@ -2,14 +2,18 @@ import express from 'express';
 import { Employee } from "../models/Employee.js";
 import {authMiddleware} from '../middleware/auth.js'
 import multer from 'multer';
-import path from 'path';
-
+import path from "path";
+import fs from "fs";
+import { validate } from '../middleware/validate.js';
+import { employeeSchema } from '../validations/schema.js';
 const router = express.Router();
+
+if (!fs.existsSync("uploads")) fs.mkdirSync("uploads");
 
 //Multer Setup -> used for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'upload/')
+    cb(null, 'uploads/')
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
@@ -25,10 +29,11 @@ const storage = multer.diskStorage({
 const upload = multer({ storage: storage });
 
 //Create Employee
-router.post('/',authMiddleware, upload.single('photo'), async(req, res) => {
+router.post('/',authMiddleware, upload.single('photo'),validate(employeeSchema), async(req, res) => {
     try{
-        const employeeData = req.body;
+        const employeeData = { ...req.validatedData };
         console.log(employeeData)
+        
         if(req.file) employeeData.photo = req.file.path;
 
         //Saving Employee Data to DB
@@ -60,8 +65,8 @@ router.get('/',authMiddleware, async(req, res) => {
         if (designation) query.designation = designation;
         if (gender) query.gender = gender;
 
-        const employees = await Employee.find(query);
-        res.json(employees)
+        const employees = await Employee.find(query).sort({ createdAt: -1 });
+        res.json({ data: employees, total: employees.length });
 
 
     }catch(e){
