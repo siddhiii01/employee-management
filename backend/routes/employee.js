@@ -40,6 +40,11 @@ router.post('/',authMiddleware, upload.single('photo'),validate(employeeSchema),
         res.status(201).json({message: 'Employee Record Saved', data: employee})
     } catch(e){
         console.error(e);
+
+        // Duplicate email — MongoDB unique constraint
+        if (e.code === 11000) {
+            return res.status(400).json({ error: 'An employee with this email already exists' });
+        }
         res.status(400).json({ error: e.message });
     }
 });
