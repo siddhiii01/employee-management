@@ -17,6 +17,7 @@ export const Dashboard = () =>  {
   const [search, setSearch] = useState('');
   const searchTimeout = useRef(null);
   const [showModal, setShowModal] = useState(false)
+  const [previewPhoto, setPreviewPhoto] = useState(null)
   const navigate = useNavigate()
 
   const fetchEmployees = async () => {
@@ -38,7 +39,7 @@ export const Dashboard = () =>  {
 
   const handleLogout = () => {
     localStorage.removeItem('token')
-    navigate('/')
+    navigate('/login')
   }
 
   return (
@@ -119,15 +120,16 @@ export const Dashboard = () =>  {
                       <td>{emp.designation}</td>
                       <td>
                         {emp.photo ? (
-                          <a href={`http://localhost:5000/${emp.photo}`} target="_blank" rel="noreferrer">
-                            <img src={photoIcon} alt="photo" className="photo-icon" />
-                          </a>
+                          <img
+                            src={photoIcon}
+                            alt="photo"
+                            className="photo-icon"
+                            style={{ cursor: 'pointer' }}
+                            onClick={() => setPreviewPhoto(`http://localhost:5000/${emp.photo}`)}
+                          />
                         ) : (
                           <img src={photoIcon} alt="photo" className="photo-icon" />
                         )}
-                      </td>
-                      <td>
-                        <img src={actionIcon} alt="action" className="action-icon" />
                       </td>
                     </tr>
                   ))}
@@ -151,6 +153,15 @@ export const Dashboard = () =>  {
           </div>
         </div>
       </div>
+
+      {previewPhoto && (
+        <div className="photo-overlay" onClick={() => setPreviewPhoto(null)}>
+          <div className="photo-popup" onClick={(e) => e.stopPropagation()}>
+            <button className="photo-popup-close" onClick={() => setPreviewPhoto(null)}>✕</button>
+            <img src={previewPhoto} alt="Employee" className="photo-popup-img" />
+          </div>
+        </div>
+      )}
 
       {showModal && (
         <EmployeeModal

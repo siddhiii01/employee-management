@@ -2,10 +2,25 @@ import {BrowserRouter, Routes, Route, Navigate} from "react-router-dom";
 import { Login } from "./pages/Login";
 import { Dashboard } from "./pages/Dashboard";
 import React from 'react';
+import { jwtDecode } from 'jwt-decode';
 
 const PrivateRoute = ({children}) => {
   const token = localStorage.getItem('token');
-  return token ? children : <Navigate to="/login"></Navigate>
+  if (!token) return <Navigate to="/login" />;
+
+  try {
+    const decoded = jwtDecode(token);
+    const isExpired = decoded.exp * 1000 < Date.now();
+    if (isExpired) {
+      localStorage.removeItem('token');
+      return <Navigate to="/login" />;
+    }
+  } catch (e) {
+    localStorage.removeItem('token');
+    return <Navigate to="/login" />;
+  }
+
+  return children;
 }
 export const App = () => {
   return (

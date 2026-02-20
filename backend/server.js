@@ -4,6 +4,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth.js'
 import employeeRoutes from "./routes/employee.js";
+import { authMiddleware } from './middleware/auth.js';
 
 dotenv.config();
 
@@ -21,7 +22,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 //Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/employees', employeeRoutes)
+app.use('/api/employees', authMiddleware, employeeRoutes)
 
 app.use((err, req, res, next) => {
     res.status(500).json({ error: err.message });
