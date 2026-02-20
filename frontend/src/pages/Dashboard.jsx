@@ -136,8 +136,6 @@ export const Dashboard = () =>  {
                           src={actionIcon}
                           alt="action"
                           className="action-icon"
-                          style={{ cursor: "pointer" }}
-                          onClick={() => console.log("Action clicked", emp._id)}
                         />
                       </td>
                     </tr>
