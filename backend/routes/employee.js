@@ -6,7 +6,7 @@ import { validate } from '../middleware/validate.js';
 import { employeeSchema } from '../validations/schema.js';
 const router = express.Router();
 
-if (!fs.existsSync("uploads")) fs.mkdirSync("uploads");
+// if (!fs.existsSync("uploads")) fs.mkdirSync("uploads");
 
 //Multer Setup -> used for file uploads
 // const storage = multer.diskStorage({
