@@ -22,7 +22,7 @@ mongoose.connect(process.env.MONGO_URI)
 
 //Routes
 app.use('/api/auth', authRoutes);
-app.use('/api/employees', authMiddleware, employeeRoutes)
+app.use('/api/employees',  employeeRoutes)
 
 app.use((err, req, res, next) => {
     res.status(500).json({ error: err.message });
