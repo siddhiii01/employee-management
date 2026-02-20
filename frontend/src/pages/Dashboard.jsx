@@ -131,6 +131,15 @@ export const Dashboard = () =>  {
                           <img src={photoIcon} alt="photo" className="photo-icon" />
                         )}
                       </td>
+                      <td>
+                        <img
+                          src={actionIcon}
+                          alt="action"
+                          className="action-icon"
+                          style={{ cursor: "pointer" }}
+                          onClick={() => console.log("Action clicked", emp._id)}
+                        />
+                      </td>
                     </tr>
                   ))}
                 </tbody>
