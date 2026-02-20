@@ -29,6 +29,7 @@ const router = express.Router();
 //Create Employee
 router.post('/',authMiddleware, upload.single('photo'),validate(employeeSchema), async(req, res) => {
     try{
+        console.log('backend hit route')
         const employeeData = { ...req.validatedData };
         console.log(employeeData)
         

@@ -17,7 +17,8 @@ export const  EmployeeModal = ({ onClose, onSuccess }) => {
         } else {
           formData.append(key, data[key])
         }
-      })
+      });
+      console.log('Formdata', formData)
       await createEmployee(formData)
       toast.success('Employee created successfully')
       onSuccess()

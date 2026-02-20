@@ -15,6 +15,10 @@ API.interceptors.request.use((req) => {
 });
 
 export const loginUser = (data) => API.post('/auth/login', data);
-export const createEmployee = (data) => API.post('/employees', data);
+export const createEmployee = (data) => API.post('/employees', data, {
+  headers: {
+    'Content-Type': 'multipart/form-data'
+  }
+});
 export const getEmployees = (params) => API.get('/employees', {params});
 
