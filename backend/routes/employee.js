@@ -1,9 +1,7 @@
 import express from 'express';
 import { Employee } from "../models/Employee.js";
 import {authMiddleware} from '../middleware/auth.js'
-import multer from 'multer';
-import path from "path";
-import fs from "fs";
+import { upload } from '../config/cloudinary.js';
 import { validate } from '../middleware/validate.js';
 import { employeeSchema } from '../validations/schema.js';
 const router = express.Router();
@@ -11,22 +9,22 @@ const router = express.Router();
 if (!fs.existsSync("uploads")) fs.mkdirSync("uploads");
 
 //Multer Setup -> used for file uploads
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, 'uploads/')
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
-    cb(
-        null,
-        path.basename(file.originalname, path.extname(file.originalname)) +
-        '-' +
-        uniqueSuffix +
-        path.extname(file.originalname)
-    )
-  }
-});
-const upload = multer({ storage: storage });
+// const storage = multer.diskStorage({
+//   destination: function (req, file, cb) {
+//     cb(null, 'uploads/')
+//   },
+//   filename: function (req, file, cb) {
+//     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9)
+//     cb(
+//         null,
+//         path.basename(file.originalname, path.extname(file.originalname)) +
+//         '-' +
+//         uniqueSuffix +
+//         path.extname(file.originalname)
+//     )
+//   }
+// });
+// const upload = multer({ storage: storage });
 
 //Create Employee
 router.post('/',authMiddleware, upload.single('photo'),validate(employeeSchema), async(req, res) => {

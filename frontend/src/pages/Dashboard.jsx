@@ -125,7 +125,7 @@ export const Dashboard = () =>  {
                             alt="photo"
                             className="photo-icon"
                             style={{ cursor: 'pointer' }}
-                            onClick={() => setPreviewPhoto(`http://localhost:5000/${emp.photo}`)}
+                            onClick={() => setPreviewPhoto(emp.photo)}
                           />
                         ) : (
                           <img src={photoIcon} alt="photo" className="photo-icon" />

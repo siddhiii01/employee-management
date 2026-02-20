@@ -13,7 +13,7 @@ const app = express();
 app.use(cors({ origin: "https://idms-frontend.vercel.app", credentials: true }))
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-app.use('/uploads', express.static('uploads'))
+// app.use('/uploads', express.static('uploads'))
 
 // MongoDB Connection
 mongoose.connect(process.env.MONGO_URI)
