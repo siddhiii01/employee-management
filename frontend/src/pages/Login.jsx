@@ -31,10 +31,10 @@ export const Login = () =>  {
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="form-group">
-            <label>User Name</label>
+            <label>Enter Email </label>
             <input
               type="text"
-              placeholder="Enter User Name"
+              placeholder="admin@email.com"
               {...register("email", { required: true })}
             />
           </div>

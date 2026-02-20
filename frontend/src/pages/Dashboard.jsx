@@ -137,14 +137,17 @@ export const Dashboard = () =>  {
           </div>
 
           {/* Footer */}
+          {/* Footer - Pinned to bottom */}
           <div className="table-footer">
-            <span className="total-records">Total Records -&gt; {employees.length}</span>
+            <div className="total-records">
+              Total Records -&gt; {employees.length}
+            </div>
             <div className="pagination">
               <button>&lt;-</button>
               <span>Page</span>
               <input type="number" defaultValue={1} readOnly />
               <button>-&gt;</button>
-            </div>
+          </div>
           </div>
         </div>
       </div>

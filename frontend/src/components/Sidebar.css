@@ -1,37 +1,46 @@
 .sidebar {
-  width: var(--sidebar-width);
-  min-height: calc(100vh - var(--header-height));
-  background: white;
-  border-right: 1px solid var(--border);
-  padding-top: 8px;
+  width: 220px;
   flex-shrink: 0;
+  background: white;
+  border-right: 2px solid #4A6FA5;
+  overflow-y: auto;
+  /* fills full height of dashboard-body */
+  align-self: stretch;
 }
 
 .sidebar-item {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 11px 16px;
+  padding: 14px 16px;
   cursor: pointer;
-  font-size: 14px;
-  color: var(--text-dark);
-  border-left: 3px solid transparent;
+  font-size: 15px;
+  color: #4A6FA5;
+  border-bottom: 1px solid #eef0f5;
+  gap: 0;
 }
 
 .sidebar-item:hover {
-  background: #f0f4ff;
-  color: var(--blue);
+  background: #eef4ff;
 }
 
 .sidebar-item.active {
-  background: #eef2ff;
-  color: var(--blue);
-  border-left: 3px solid var(--blue);
-  font-weight: 500;
+  background: #e8f0fe;
+  color: #4A6FA5;
+  font-weight: 600;
 }
 
 .sidebar-icon {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
   flex-shrink: 0;
 }
+
+/* The vertical blue divider between icon and label */
+.sidebar-divider {
+  width: 2px;
+  height: 22px;
+  background: #4A6FA5;
+  margin: 0 12px;
+  flex-shrink: 0;
+  opacity: 0.5;
+} 

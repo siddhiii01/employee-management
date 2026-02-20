@@ -40,6 +40,7 @@ export default function Sidebar() {
           className={`sidebar-item ${item.label === 'Employee' ? 'active' : ''}`}
         >
           <img src={item.icon} alt={item.label} className="sidebar-icon" />
+          <div className="sidebar-divider" />
           <span>{item.label}</span>
         </div>
       ))}
